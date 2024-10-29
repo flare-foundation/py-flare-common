@@ -56,4 +56,6 @@ ignore = [
     'E402', # module import not at top of file
 ]
 
+[tool.pytest.ini_options]
+pythonpath = [ "src" ]
 
