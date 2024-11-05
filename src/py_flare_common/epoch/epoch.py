@@ -46,10 +46,6 @@ class Epoch:
 class VotingEpoch(Epoch):
     factory: "VotingEpochFactory"
 
-    # def __attrs_post_init__(self):
-    #     error_message = "VotingEpochFactory must be used for initialisation of VotingEpoch"
-    #     assert isinstance(self.factory, VotingEpochFactory), error_message
-
     def to_reward_epoch(self) -> "RewardEpoch":
         return self.factory.make_reward_epoch(self.start_s)
 
@@ -60,10 +56,6 @@ class VotingEpoch(Epoch):
 @frozen
 class RewardEpoch(Epoch):
     factory: "RewardEpochFactory"
-
-    # def __attrs_post_init__(self):
-    #     error_message = "RewardEpochFactory must be used for initialisation of RewardEpoch"
-    #     assert isinstance(self.factory, RewardEpochFactory), error_message
 
     def to_first_voting_epoch(self) -> VotingEpoch:
         return self.factory.make_voting_epoch(self.start_s)
