@@ -10,5 +10,4 @@ class FtsoMedian:
     value: int
     first_quartile: int
     third_quartile: int
-    high: int
-    low: int
+    sorted_votes: list[FtsoVote]
