@@ -1,9 +1,11 @@
 from attrs import frozen
 
-@frozen 
+
+@frozen
 class FtsoVote:
     value: int
     weight: int
+
 
 @frozen
 class FtsoMedian:
