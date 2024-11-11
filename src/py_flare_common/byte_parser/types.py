@@ -62,9 +62,11 @@ class FDCS1:
 
 @frozen
 class FDCS2:
-    pass
+    bit_vector: int
 
 
 @frozen
 class FDCSS:
-    pass
+    type: int
+    message: Message
+    signature: Signature

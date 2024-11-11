@@ -57,7 +57,7 @@ def parse_submit2(message: bytes | str) -> ParsedMessage[FTSOS2, FDCS2]:
 
 
 def parse_submit_signature(message: bytes | str) -> ParsedMessage[FTSOSS, FDCSS]:
-    return gen_parse(message, ftso_submit_signature, fdc_submit_signature)
+    return gen_parse(message, ftsosubmit_signature, fdc_submit_signature)
 
 
 def ftso_submit1(payload: bytes) -> FTSOS1:
@@ -84,11 +84,12 @@ def ftso_submit2(payload: bytes) -> FTSOS2:
     return FTSOS2(random=random, values=values)
 
 
-def fdc_submit2(payload: bytes) -> FDCS2: ...
+def fdc_submit2(payload: bytes) -> FDCS2:
+    ...
+#     return payload.
 
 
-def ftso_submit_signature(payload: bytes) -> FTSOSS:
-    # Do I need to un_prefix_0x ?
+def _submit_signature(payload: bytes) -> tuple[int, Message, Signature]:
     payload_bp = ByteParser(payload)
     type = payload_bp.uint8()
     message_to_parse = payload_bp.next_n(38)
@@ -113,6 +114,11 @@ def ftso_submit_signature(payload: bytes) -> FTSOSS:
     assert signature_bp.is_empty()
     signature = Signature(v=v, r=r, s=s)
 
+    return type, message, signature
+
+
+def ftsosubmit_signature(payload: bytes) -> FTSOSS:
+    type, message, signature = _submit_signature(payload)
     return FTSOSS(
         type=type,
         message=message,
@@ -120,4 +126,10 @@ def ftso_submit_signature(payload: bytes) -> FTSOSS:
     )
 
 
-def fdc_submit_signature(payload: bytes) -> FDCSS: ...
+def fdc_submit_signature(payload: bytes) -> FDCSS:
+    type, message, signature = _submit_signature(payload)
+    return FDCSS(
+        type=type,
+        message=message,
+        signature=signature,
+    )
