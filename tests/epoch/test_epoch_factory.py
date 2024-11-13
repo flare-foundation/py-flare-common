@@ -2,8 +2,8 @@ import time
 
 import pytest
 
-from py_flare_common.epoch.epoch import Epoch, RewardEpoch, VotingEpoch
-from py_flare_common.epoch.factory import (
+from py_flare_common.fsp.epoch.epoch import Epoch, RewardEpoch, VotingEpoch
+from py_flare_common.fsp.epoch.factory import (
     Factory,
     RewardEpochFactory,
     VotingEpochFactory,

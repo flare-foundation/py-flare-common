@@ -2,7 +2,7 @@ import time
 
 from attrs import frozen
 
-from py_flare_common.epoch.epoch import Epoch, RewardEpoch, VotingEpoch
+from py_flare_common.fsp.epoch.epoch import Epoch, RewardEpoch, VotingEpoch
 
 
 @frozen

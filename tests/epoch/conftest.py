@@ -1,6 +1,6 @@
 import pytest
 
-from py_flare_common.epoch.factory import (
+from py_flare_common.fsp.epoch.factory import (
     Factory,
     RewardEpochFactory,
     VotingEpochFactory,

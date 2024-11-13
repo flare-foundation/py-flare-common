@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Self
 from attrs import frozen
 
 if TYPE_CHECKING:
-    from py_flare_common.epoch.factory import (
+    from py_flare_common.fsp.epoch.factory import (
         Factory,
         RewardEpochFactory,
         VotingEpochFactory,
