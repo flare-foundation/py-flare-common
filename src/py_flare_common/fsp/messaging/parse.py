@@ -68,7 +68,7 @@ def ftso_submit1(payload: bytes) -> FtsoSubmit1:
 
 
 def fdc_submit1(payload: bytes) -> FdcSubmit1:
-    raise Exception
+    raise RuntimeError
 
 
 def ftso_submit2(payload: bytes) -> FtsoSubmit2:
@@ -105,6 +105,7 @@ def fdc_submit2(payload: bytes) -> FdcSubmit2:
 
 def _submit_signature(payload: bytes) -> tuple[int, bytes, Signature]:
     payload_bp = ByteParser(payload)
+
     type = payload_bp.uint8()
     message_to_parse = payload_bp.next_n(38)
     signature_to_parse = payload_bp.next_n(65)
