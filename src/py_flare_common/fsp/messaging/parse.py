@@ -1,7 +1,7 @@
 from typing import Callable
 
-from py_flare_common.fsp.messaging.byte_parser import ByteParser, ParseError
-from py_flare_common.fsp.messaging.types import (
+from .byte_parser import ByteParser, ParseError
+from .types import (
     FdcMessage,
     FdcSubmit1,
     FdcSubmit2,
@@ -18,10 +18,14 @@ from py_flare_common.fsp.messaging.types import (
 from py_flare_common.merkle.hexstr import to_bytes
 
 
-def gen_parse(
+def _default_parse(b: bytes) -> bytes:
+    return b
+
+
+def parse_generic_tx(
     message: bytes | str,
-    pid_100_parse: Callable[[bytes], T],
-    pid_200_parse: Callable[[bytes], U],
+    pid_100_parse: Callable[[bytes], T] = _default_parse,
+    pid_200_parse: Callable[[bytes], U] = _default_parse,
 ) -> ParsedMessage[T, U]:
     kwargs: dict[str, ParsedPayload | None] = {"ftso": None, "fdc": None}
     message = to_bytes(message)
@@ -48,27 +52,30 @@ def gen_parse(
     return ParsedMessage(**kwargs)
 
 
-def parse_submit1(message: bytes | str) -> ParsedMessage[FtsoSubmit1, FdcSubmit1]:
-    return gen_parse(message, ftso_submit1, fdc_submit1)
+def parse_submit1_tx(message: bytes | str) -> ParsedMessage[FtsoSubmit1, FdcSubmit1]:
+    return parse_generic_tx(message, ftso_submit1, fdc_submit1)
 
 
-def parse_submit2(message: bytes | str) -> ParsedMessage[FtsoSubmit2, FdcSubmit2]:
-    return gen_parse(message, ftso_submit2, fdc_submit2)
+def parse_submit2_tx(message: bytes | str) -> ParsedMessage[FtsoSubmit2, FdcSubmit2]:
+    return parse_generic_tx(message, ftso_submit2, fdc_submit2)
 
 
-def parse_submit_signature(
+def parse_submit_signature_tx(
     message: bytes | str,
 ) -> ParsedMessage[SubmitSignature[FtsoMessage], SubmitSignature[FdcMessage]]:
-    return gen_parse(message, ftso_submit_signature, fdc_submit_signature)
+    return parse_generic_tx(message, ftso_submit_signature, fdc_submit_signature)
 
 
 def ftso_submit1(payload: bytes) -> FtsoSubmit1:
-    assert len(payload) == 32
+    if len(payload) != 32:
+        raise ParseError("Invalid payload length: expected 32 bytes.")
     return FtsoSubmit1(payload)
 
 
 def fdc_submit1(payload: bytes) -> FdcSubmit1:
-    raise RuntimeError
+    if payload:
+        raise ParseError("Invalid payload length: expected 0 bytes.")
+    return FdcSubmit1()
 
 
 def ftso_submit2(payload: bytes) -> FtsoSubmit2:
@@ -95,7 +102,7 @@ def fdc_submit2(payload: bytes) -> FdcSubmit2:
     bit_vector = [False for _ in range(n_requests - len(_bit_vector))] + bit_vector
 
     if len(bit_vector) != n_requests:
-        raise ParseError
+        raise ParseError(f"Invalid payload length.")
 
     return FdcSubmit2(
         number_of_requests=n_requests,
@@ -109,13 +116,16 @@ def _submit_signature(payload: bytes) -> tuple[int, bytes, Signature]:
     type = payload_bp.uint8()
     message_to_parse = payload_bp.next_n(38)
     signature_to_parse = payload_bp.next_n(65)
-    assert payload_bp.is_empty()
+    if not payload_bp.is_empty():
+        raise ParseError("Invalid payload length: expected 104 bytes.")
 
     signature_bp = ByteParser(signature_to_parse)
     v = signature_bp.next_n(1).hex()
     r = signature_bp.next_n(32).hex()
     s = signature_bp.next_n(32).hex()
-    assert signature_bp.is_empty()
+    if not signature_bp.is_empty():
+        raise ParseError("Invalid payload length: expected 65 bytes.")
+        
     signature = Signature(v=v, r=r, s=s)
 
     return type, message_to_parse, signature

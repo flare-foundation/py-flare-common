@@ -1,6 +1,6 @@
-from py_flare_common.epoch.epoch import RewardEpoch, VotingEpoch
-from py_flare_common.epoch.factory import RewardEpochFactory, VotingEpochFactory
-from py_flare_common.epoch.timeing.config import coston_chain_config
+from ...epoch import RewardEpoch, VotingEpoch
+from ...factory import RewardEpochFactory, VotingEpochFactory
+from ..config import coston_chain_config
 
 vef = VotingEpochFactory(
     first_epoch_epoc=coston_chain_config.voting_first_epoch_epoc,

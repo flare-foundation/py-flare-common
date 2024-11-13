@@ -9,10 +9,11 @@ from py_flare_common.fsp.messaging.parse import (
     ftso_submit1,
     ftso_submit2,
     ftso_submit_signature,
-    gen_parse,
+    parse_generic_tx,
 )
 from py_flare_common.fsp.messaging.types import (
     FdcMessage,
+    FdcSubmit1,
     FdcSubmit2,
     FtsoMessage,
     FtsoSubmit1,
@@ -76,7 +77,7 @@ class TestSubmit:
         ],
     )
     def test_submit_signature_wrong_data(self, payload):
-        with pytest.raises((AssertionError, ParseError)):
+        with pytest.raises(ParseError):
             _submit_signature(payload)
 
     @pytest.mark.parametrize(
@@ -126,7 +127,7 @@ class TestSubmit:
         payload_length_fdc,
         payload_fdc,
     ):
-        parsed_message = gen_parse(message, lambda x: x + b"100", lambda x: x + b"200")
+        parsed_message = parse_generic_tx(message, lambda x: x + b"100", lambda x: x + b"200")
 
         assert isinstance(parsed_message, ParsedMessage)
 
@@ -182,7 +183,7 @@ class TestSubmit:
     def test_gen_parse_only_one_protocol(
         self, message, protocol_id, voting_round_id, payload_length, payload
     ):
-        parsed_message = gen_parse(message, lambda x: x, lambda x: x)
+        parsed_message = parse_generic_tx(message, pid_100_parse=lambda x: x)
 
         assert isinstance(parsed_message, ParsedMessage)
 
@@ -203,7 +204,7 @@ class TestSubmit:
 
     @pytest.mark.parametrize("message", [""])
     def test_gen_parse_no_protocols(self, message):
-        parsed_message = gen_parse(message, lambda x: x, lambda x: x)
+        parsed_message = parse_generic_tx(message, pid_200_parse=lambda x: x)
 
         assert isinstance(parsed_message, ParsedMessage)
         assert parsed_message.ftso is None
@@ -223,13 +224,13 @@ class TestSubmit:
     )
     def test_gen_parse_error(self, message):
         with pytest.raises(ParseError):
-            gen_parse(message, lambda x: x, lambda x: x)
+            parse_generic_tx(message)
 
     @pytest.mark.parametrize("data, excepted", [(b"\x00", b"\x00"), ("00", b"\x00")])
     def test_to_bytes(self, data, excepted):
         assert to_bytes(data) == excepted
 
-    @pytest.mark.parametrize("data, excepted", [("x0", b"\x00")])
+    @pytest.mark.parametrize("data", ["x0"])
     def test_to_bytes_wrong_string(self, data):
         with pytest.raises(ValueError):
             to_bytes(data)
@@ -258,7 +259,7 @@ class TestFtsoSubmit:
         ],
     )
     def test_ftso_submit1_wrong_length(self, payload):
-        with pytest.raises(AssertionError):
+        with pytest.raises(ParseError):
             ftso_submit1(payload)
 
     @pytest.mark.parametrize(
@@ -317,8 +318,12 @@ class TestFtsoSubmit:
 
 class TestFdcSubmit:
     def test_fdc_submit1(self):
-        with pytest.raises(RuntimeError):
-            fdc_submit1(b"")
+        with pytest.raises(ParseError):
+            fdc_submit1(b"\x00")
+
+    def test_fdc_submit1_empty_payload(self):
+        fdc_S1 = fdc_submit1(b"")
+        assert isinstance(fdc_S1, FdcSubmit1)
 
     @pytest.mark.parametrize(
         "payload, n_requests, bit_vector",

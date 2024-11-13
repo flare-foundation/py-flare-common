@@ -1,7 +1,7 @@
 import pytest
 
-from py_flare_common.ftso.medain import calculate_median
-from py_flare_common.ftso.types import FtsoMedian, FtsoVote
+from py_flare_common.ftso.median import calculate_median, FtsoMedian, FtsoVote
+
 
 
 class TestCalculateMedian:
