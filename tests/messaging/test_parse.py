@@ -10,6 +10,9 @@ from py_flare_common.fsp.messaging.parse import (
     ftso_submit2,
     ftso_submit_signature,
     parse_generic_tx,
+    parse_submit1_tx,
+    parse_submit2_tx,
+    parse_submit_signature_tx,
 )
 from py_flare_common.fsp.messaging.types import (
     FdcMessage,
@@ -127,7 +130,9 @@ class TestSubmit:
         payload_length_fdc,
         payload_fdc,
     ):
-        parsed_message = parse_generic_tx(message, lambda x: x + b"100", lambda x: x + b"200")
+        parsed_message = parse_generic_tx(
+            message, lambda x: x + b"100", lambda x: x + b"200"
+        )
 
         assert isinstance(parsed_message, ParsedMessage)
 
@@ -234,6 +239,196 @@ class TestSubmit:
     def test_to_bytes_wrong_string(self, data):
         with pytest.raises(ValueError):
             to_bytes(data)
+
+    # Real life example: https://flare-systems-explorer.flare.network/top-level-protocol/60aa107e05da3c10ec2d0d51c5424ca85907c170fb31c19f929b96b7ea49e6aa
+    @pytest.mark.parametrize(
+        "message, protocol_id, voting_round_id, size, hash",
+        [
+            (
+                "0x6c532fae64000c6620002005a93355a28127ff0ca2d8136648c1fd682e0041f8367ba4567586b3d4149d54"[
+                    10:
+                ],
+                100,
+                812576,
+                32,
+                bytes.fromhex(
+                    "05a93355a28127ff0ca2d8136648c1fd682e0041f8367ba4567586b3d4149d54"
+                ),
+            )
+        ],
+    )
+    def test_parse_submit1_tx(self, message, protocol_id, voting_round_id, size, hash):
+        parsed_payload = parse_submit1_tx(message)
+        assert isinstance(parsed_payload, ParsedMessage)
+
+        ftso = parsed_payload.ftso
+        fdc = parsed_payload.fdc
+        assert fdc is None
+        assert isinstance(ftso, ParsedPayload)
+        assert ftso.protocol_id == protocol_id
+        assert ftso.voting_round_id == voting_round_id
+        assert ftso.size == size
+
+        ftsoS1 = ftso.payload
+        assert isinstance(ftsoS1, FtsoSubmit1)
+        assert ftsoS1.commit_hash == hash
+
+    # Real life example: https://flare-systems-explorer.flare.network/top-level-protocol/8c15583a670ba385c82ff9aed3f4b3244815f0b6c700654b46a1298769afd413
+    @pytest.mark.parametrize(
+        "message, protocol_id, voting_round_id, size, random, values",
+        [
+            (
+                (
+                    "0x9d00c9fd64000c662000e83ad6dadc250b9eee6480e729a9b615185c01e067e15738"
+                    + "cafe352d851b529c5a801a963f8000dfca800039bc8000f4458007e5b5803311dc804"
+                    + "32212805ff7b9800098378089430f8001869f8000996b8007cd798000e83180223021"
+                    + "80311c9480027c2e8002001180064824800038ae800117e180095205800d1b0c8001c"
+                    + "afd800bd5d38014b103807c895c8007fd01800130fa80015bc48003979e8000931880"
+                    + "00a1b78060a3b7800ab8148008a8e18000db888000655e80215923800540998053243"
+                    + "580084836800045f8800d346480018695800186e5800654108000762b8001e52e80010feb"
+                )[10:],
+                100,
+                812576,
+                232,
+                26613761005485227210124837044607206462361910438060874105373946905076167777370,
+                [
+                    1742399,
+                    57290,
+                    14780,
+                    62533,
+                    517557,
+                    3346908,
+                    4399634,
+                    6289337,
+                    38967,
+                    8995599,
+                    99999,
+                    39275,
+                    511353,
+                    59441,
+                    2240545,
+                    3218580,
+                    162862,
+                    131089,
+                    411684,
+                    14510,
+                    71649,
+                    610821,
+                    858892,
+                    117501,
+                    775635,
+                    1356035,
+                    8161628,
+                    523521,
+                    78074,
+                    89028,
+                    235422,
+                    37656,
+                    41399,
+                    6333367,
+                    702484,
+                    567521,
+                    56200,
+                    25950,
+                    2185507,
+                    344217,
+                    5448757,
+                    542774,
+                    17912,
+                    865380,
+                    99989,
+                    100069,
+                    414736,
+                    30251,
+                    124206,
+                    69611,
+                ],
+            )
+        ],
+    )
+    def test_parse_submit2_tx(
+        self, message, protocol_id, voting_round_id, size, random, values
+    ):
+        parsed_payload = parse_submit2_tx(message)
+        assert isinstance(parsed_payload, ParsedMessage)
+
+        ftso = parsed_payload.ftso
+        fdc = parsed_payload.fdc
+        assert fdc is None
+        assert isinstance(ftso, ParsedPayload)
+        assert ftso.protocol_id == protocol_id
+        assert ftso.voting_round_id == voting_round_id
+        assert ftso.size == size
+
+        ftsoS1 = ftso.payload
+        assert isinstance(ftsoS1, FtsoSubmit2)
+        assert ftsoS1.random == random
+        assert ftsoS1.values == values
+
+    # Real life example: https://flare-systems-explorer.flare.network/top-level-protocol/b867d0a0a177bbcf97b9e6743eeaf04f9e95ac52724498dc8a4c448677c713d9
+    @pytest.mark.parametrize(
+        "message, protocol_id, voting_round_id, size, type, v, r, s, mess_protocol_id, random_quality_score, merkle_root",
+        [
+            (
+                (
+                    "0x57eed58064000c667600680064000c667601200163ea6a576ea7fc46557b8611"
+                    + "339d01e9b0d832d80060f892e02afe7700121c03e351a3079a4fcbb8c3fa2a8e"
+                    + "241107d28fd9387d25157a341c3afc29a2eead1cdc60119c390e089ecf940d61"
+                    + "769b226b48c9056b5b095d3e83f3363442bb12"
+                )[10:],
+                100,
+                812662,
+                104,
+                0,
+                "1c",
+                "03e351a3079a4fcbb8c3fa2a8e241107d28fd9387d25157a341c3afc29a2eead",
+                "1cdc60119c390e089ecf940d61769b226b48c9056b5b095d3e83f3363442bb12",
+                100,
+                1,
+                "200163ea6a576ea7fc46557b8611339d01e9b0d832d80060f892e02afe770012",
+            )
+        ],
+    )
+    def test_parse_submit_signature_tx(
+        self,
+        message,
+        protocol_id,
+        voting_round_id,
+        size,
+        type,
+        v,
+        r,
+        s,
+        mess_protocol_id,
+        random_quality_score,
+        merkle_root,
+    ):
+        parsed_payload = parse_submit_signature_tx(message)
+        assert isinstance(parsed_payload, ParsedMessage)
+
+        ftso = parsed_payload.ftso
+        fdc = parsed_payload.fdc
+        assert fdc is None
+        assert isinstance(ftso, ParsedPayload)
+        assert ftso.protocol_id == protocol_id
+        assert ftso.voting_round_id == voting_round_id
+        assert ftso.size == size
+
+        ftsoS1 = ftso.payload
+        assert isinstance(ftsoS1, SubmitSignature)
+        assert ftsoS1.type == type
+
+        ftso_signature = ftsoS1.signature
+        assert isinstance(ftso_signature, Signature)
+        assert ftso_signature.v == v
+        assert ftso_signature.r == r
+        assert ftso_signature.s == s
+
+        ftso_message = ftsoS1.message
+        assert isinstance(ftso_message, FtsoMessage)
+        assert ftso_message.protocol_id == mess_protocol_id
+        assert ftso_message.merkle_root == merkle_root
+        assert ftso_message.random_quality_score == random_quality_score
 
 
 class TestFtsoSubmit:

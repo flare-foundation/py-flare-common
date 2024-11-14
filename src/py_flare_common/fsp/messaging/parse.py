@@ -1,5 +1,7 @@
 from typing import Callable
 
+from py_flare_common.merkle.hexstr import to_bytes
+
 from .byte_parser import ByteParser, ParseError
 from .types import (
     FdcMessage,
@@ -15,7 +17,6 @@ from .types import (
     T,
     U,
 )
-from py_flare_common.merkle.hexstr import to_bytes
 
 
 def _default_parse(b: bytes) -> bytes:
@@ -102,7 +103,7 @@ def fdc_submit2(payload: bytes) -> FdcSubmit2:
     bit_vector = [False for _ in range(n_requests - len(_bit_vector))] + bit_vector
 
     if len(bit_vector) != n_requests:
-        raise ParseError(f"Invalid payload length.")
+        raise ParseError("Invalid payload length.")
 
     return FdcSubmit2(
         number_of_requests=n_requests,
@@ -125,7 +126,7 @@ def _submit_signature(payload: bytes) -> tuple[int, bytes, Signature]:
     s = signature_bp.next_n(32).hex()
     if not signature_bp.is_empty():
         raise ParseError("Invalid payload length: expected 65 bytes.")
-        
+
     signature = Signature(v=v, r=r, s=s)
 
     return type, message_to_parse, signature
