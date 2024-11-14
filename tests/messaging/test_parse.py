@@ -273,7 +273,6 @@ class TestSubmit:
         assert isinstance(ftsoS1, FtsoSubmit1)
         assert ftsoS1.commit_hash == hash
 
-    # Real life example: https://flare-systems-explorer.flare.network/top-level-protocol/8c15583a670ba385c82ff9aed3f4b3244815f0b6c700654b46a1298769afd413
     @pytest.mark.parametrize(
         "message, protocol_id, voting_round_id, size, random, values",
         [
