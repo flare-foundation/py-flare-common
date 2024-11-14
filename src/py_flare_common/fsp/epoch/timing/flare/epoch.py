@@ -2,7 +2,6 @@ from ...epoch import RewardEpoch, VotingEpoch
 from ...factory import RewardEpochFactory, VotingEpochFactory
 from ..config import flare_chain_config
 
-
 vef = VotingEpochFactory(
     first_epoch_epoc=flare_chain_config.voting_first_epoch_epoc,
     epoch_duration=flare_chain_config.voting_epoch_duration,

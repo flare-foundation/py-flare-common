@@ -1,5 +1,6 @@
 from attrs import frozen
 
+
 @frozen
 class FtsoVote:
     value: int
@@ -12,7 +13,6 @@ class FtsoMedian:
     first_quartile: int
     third_quartile: int
     sorted_votes: list[FtsoVote]
-
 
 
 def calculate_median(votes: list[FtsoVote]) -> FtsoMedian | None:
