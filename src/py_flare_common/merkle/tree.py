@@ -4,7 +4,7 @@ from eth_hash.auto import keccak
 from .hexstr import is_hex_str, prefix_0x, un_prefix_0x
 
 
-def hash_function(value: str | bytes) -> str:
+def single_hash(value: str | bytes) -> str:
     if isinstance(value, str):
         if not is_hex_str(value):
             raise ValueError("Invalid hex string")
@@ -19,11 +19,6 @@ def to_hex(value: str, pad_to_bytes: int) -> str:
     return "0x" + padded_hex
 
 
-# Single value hash function
-def single_hash(value: str) -> str:
-    return hash_function(value)
-
-
 # Function to compute a sorted hash of two 32-byte strings
 def sorted_hash_pair(x: str, y: str) -> str:
     x = un_prefix_0x(x)
@@ -34,7 +29,7 @@ def sorted_hash_pair(x: str, y: str) -> str:
         encoded = encode(["bytes32", "bytes32"], [xx, yy])
     else:
         encoded = encode(["bytes32", "bytes32"], [yy, xx])
-    return hash_function(encoded)
+    return single_hash(encoded)
 
 
 class MerkleTree:
