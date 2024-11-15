@@ -64,48 +64,21 @@ class TestSubmit:
         "message, voting_round_id_ftso, payload_length_ftso, payload_ftso, voting_round_id_fdc, payload_length_fdc, payload_fdc",
         [
             (
-                (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00")
-                + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x02" + b"\x00\x01"),
-                1,
-                2,
-                b"\x00\x00",
-                2,
-                2,
-                b"\x00\x01",
+                (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00") + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x02" + b"\x00\x01"),
+                1, 2, b"\x00\x00", 2, 2, b"\x00\x01",
             ),
             (
-                (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\xc0\x00")
-                + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x02" + b"\x00\xc1")
-                + (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00")
-                + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x02" + b"\x00\x01"),
-                1,
-                2,
-                b"\x00\x00",
-                2,
-                2,
-                b"\x00\x01",
+                (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\xc0\x00") + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x02" + b"\x00\xc1") + (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00") + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x02" + b"\x00\x01"),
+                1, 2, b"\x00\x00", 2, 2, b"\x00\x01",
             ),
             (
-                (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00").hex()
-                + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x02" + b"\x00\x01").hex(),
-                1,
-                2,
-                b"\x00\x00",
-                2,
-                2,
-                b"\x00\x01",
+                (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00").hex() + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x02" + b"\x00\x01").hex(),
+                1, 2, b"\x00\x00", 2, 2, b"\x00\x01",
             ),
         ],
     )
     def test_gen_parse(
-        self,
-        message,
-        voting_round_id_ftso,
-        payload_length_ftso,
-        payload_ftso,
-        voting_round_id_fdc,
-        payload_length_fdc,
-        payload_fdc,
+        self, message, voting_round_id_ftso, payload_length_ftso, payload_ftso, voting_round_id_fdc, payload_length_fdc, payload_fdc,
     ):
         parsed_message = parse_generic_tx(
             message, lambda x: x + b"100", lambda x: x + b"200"
@@ -132,33 +105,19 @@ class TestSubmit:
         [
             (
                 (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00"),
-                100,
-                1,
-                2,
-                b"\x00\x00",
+                100, 1, 2, b"\x00\x00",
             ),
             (
-                (b"d" + b"\x00\x00\x00\x09" + b"\x00\x02" + b"\xc7\x00")
-                + (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00"),
-                100,
-                1,
-                2,
-                b"\x00\x00",
+                (b"d" + b"\x00\x00\x00\x09" + b"\x00\x02" + b"\xc7\x00") + (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00"),
+                100, 1, 2, b"\x00\x00",
             ),
             (
                 (b"\xc8" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00"),
-                200,
-                1,
-                2,
-                b"\x00\x00",
+                200, 1, 2, b"\x00\x00",
             ),
             (
-                (b"\xc8" + b"\x00\x00\x00\x09" + b"\x00\x02" + b"\xc7\x00").hex()
-                + (b"\xc8" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00").hex(),
-                200,
-                1,
-                2,
-                b"\x00\x00",
+                (b"\xc8" + b"\x00\x00\x00\x09" + b"\x00\x02" + b"\xc7\x00").hex() + (b"\xc8" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00").hex(),
+                200, 1, 2, b"\x00\x00",
             ),
         ],
     )
@@ -197,10 +156,7 @@ class TestSubmit:
         [
             b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00\x00",
             b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00",
-            (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\xc0\x00")
-            + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x02" + b"\x00\xc1")
-            + (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00")
-            + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x01" + b"\x00\x01"),
+            (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\xc0\x00") + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x02" + b"\x00\xc1") + (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00") + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x01" + b"\x00\x01"),
             b"d\x00\x00\x00\x01\x00\x02\x00".hex(),
         ],
     )
@@ -222,15 +178,9 @@ class TestSubmit:
         "message, protocol_id, voting_round_id, size, hash",
         [
             (
-                "0x6c532fae64000c6620002005a93355a28127ff0ca2d8136648c1fd682e0041f8367ba4567586b3d4149d54"[
-                    10:
-                ],
-                100,
-                812576,
-                32,
-                bytes.fromhex(
-                    "05a93355a28127ff0ca2d8136648c1fd682e0041f8367ba4567586b3d4149d54"
-                ),
+                "0x6c532fae64000c6620002005a93355a28127ff0ca2d8136648c1fd682e0041f8367ba4567586b3d4149d54"[10:],
+                100, 812576, 32,
+                bytes.fromhex("05a93355a28127ff0ca2d8136648c1fd682e0041f8367ba4567586b3d4149d54"),
             )
         ],
     )
@@ -250,76 +200,14 @@ class TestSubmit:
         assert isinstance(ftsoS1, FtsoSubmit1)
         assert ftsoS1.commit_hash == hash
 
-    # Real life example: https://flare-systems-explorer.flare.network/top-level-protocol/8c15583a670ba385c82ff9aed3f4b3244815f0b6c700654b46a1298769afd413
+    # Real life example: https://flare-systems-explorer.flare.network/top-level-protocol/a65e3db73be6760559c2c13310bd0c3d8f2e456ea42a96838d3fc7f90bf33594
     @pytest.mark.parametrize(
         "message, protocol_id, voting_round_id, size, random, values",
         [
             (
-                (
-                    "0x9d00c9fd64000c662000e83ad6dadc250b9eee6480e729a9b615185c01e067e15738"
-                    + "cafe352d851b529c5a801a963f8000dfca800039bc8000f4458007e5b5803311dc804"
-                    + "32212805ff7b9800098378089430f8001869f8000996b8007cd798000e83180223021"
-                    + "80311c9480027c2e8002001180064824800038ae800117e180095205800d1b0c8001c"
-                    + "afd800bd5d38014b103807c895c8007fd01800130fa80015bc48003979e8000931880"
-                    + "00a1b78060a3b7800ab8148008a8e18000db888000655e80215923800540998053243"
-                    + "580084836800045f8800d346480018695800186e5800654108000762b8001e52e80010feb"
-                )[10:],
-                100,
-                812576,
-                232,
-                26613761005485227210124837044607206462361910438060874105373946905076167777370,
-                [
-                    1742399,
-                    57290,
-                    14780,
-                    62533,
-                    517557,
-                    3346908,
-                    4399634,
-                    6289337,
-                    38967,
-                    8995599,
-                    99999,
-                    39275,
-                    511353,
-                    59441,
-                    2240545,
-                    3218580,
-                    162862,
-                    131089,
-                    411684,
-                    14510,
-                    71649,
-                    610821,
-                    858892,
-                    117501,
-                    775635,
-                    1356035,
-                    8161628,
-                    523521,
-                    78074,
-                    89028,
-                    235422,
-                    37656,
-                    41399,
-                    6333367,
-                    702484,
-                    567521,
-                    56200,
-                    25950,
-                    2185507,
-                    344217,
-                    5448757,
-                    542774,
-                    17912,
-                    865380,
-                    99989,
-                    100069,
-                    414736,
-                    30251,
-                    124206,
-                    69611,
-                ],
+                "0x9d00c9fd64000c662000e83ad6dadc250b9eee6480e729a9b615185c01e067e15738cafe352d851b529c5a801a963f8000dfca800039bc8000f4458007e5b5803311dc80432212805ff7b9800098378089430f8001869f8000996b8007cd798000e8318022302180311c9480027c2e8002001180064824800038ae800117e180095205800d1b0c8001cafd800bd5d38014b103807c895c8007fd01800130fa80015bc48003979e800093188000a1b78060a3b7800ab8148008a8e18000db888000655e80215923800540998053243580084836800045f8800d346480018695800186e5800654108000762b8001e52e80010feb"[10:],
+                100, 812576, 232, 26613761005485227210124837044607206462361910438060874105373946905076167777370,
+                [1742399, 57290, 14780, 62533, 517557, 3346908, 4399634, 6289337, 38967, 8995599, 99999, 39275, 511353, 59441, 2240545, 3218580, 162862, 131089, 411684, 14510, 71649, 610821, 858892, 117501, 775635, 1356035, 8161628, 523521, 78074, 89028, 235422, 37656, 41399, 6333367, 702484, 567521, 56200, 25950, 2185507, 344217, 5448757, 542774, 17912, 865380, 99989, 100069, 414736, 30251, 124206, 69611],
             )
         ],
     )
@@ -347,38 +235,14 @@ class TestSubmit:
         "message, protocol_id, voting_round_id, size, type, v, r, s, mess_protocol_id, random_quality_score, merkle_root",
         [
             (
-                (
-                    "0x57eed58064000c667600680064000c667601200163ea6a576ea7fc46557b8611"
-                    + "339d01e9b0d832d80060f892e02afe7700121c03e351a3079a4fcbb8c3fa2a8e"
-                    + "241107d28fd9387d25157a341c3afc29a2eead1cdc60119c390e089ecf940d61"
-                    + "769b226b48c9056b5b095d3e83f3363442bb12"
-                )[10:],
-                100,
-                812662,
-                104,
-                0,
-                "1c",
-                "03e351a3079a4fcbb8c3fa2a8e241107d28fd9387d25157a341c3afc29a2eead",
-                "1cdc60119c390e089ecf940d61769b226b48c9056b5b095d3e83f3363442bb12",
-                100,
-                1,
-                "200163ea6a576ea7fc46557b8611339d01e9b0d832d80060f892e02afe770012",
+                "0x57eed58064000c667600680064000c667601200163ea6a576ea7fc46557b8611339d01e9b0d832d80060f892e02afe7700121c03e351a3079a4fcbb8c3fa2a8e241107d28fd9387d25157a341c3afc29a2eead1cdc60119c390e089ecf940d61769b226b48c9056b5b095d3e83f3363442bb12"[10:],
+                100, 812662, 104, 0, "1c", "03e351a3079a4fcbb8c3fa2a8e241107d28fd9387d25157a341c3afc29a2eead", "1cdc60119c390e089ecf940d61769b226b48c9056b5b095d3e83f3363442bb12",
+                100, 1, "200163ea6a576ea7fc46557b8611339d01e9b0d832d80060f892e02afe770012",
             )
         ],
     )
     def test_parse_submit_signature_tx(
-        self,
-        message,
-        protocol_id,
-        voting_round_id,
-        size,
-        type,
-        v,
-        r,
-        s,
-        mess_protocol_id,
-        random_quality_score,
-        merkle_root,
+        self, message, protocol_id, voting_round_id, size, type, v, r, s, mess_protocol_id, random_quality_score, merkle_root,
     ):
         parsed_payload = parse_submit_signature_tx(message)
         assert isinstance(parsed_payload, ParsedMessage)
@@ -463,15 +327,8 @@ class TestFtsoSubmit:
         "payload, protocol_id, random_quality_score, merkle_root",
         [
             (
-                b"\x01"
-                + b"\x05"
-                + b"\x00\x00\x00\x00"
-                + b"\x06"
-                + b"\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c"
-                + b"\x00" * 65,
-                5,
-                6,
-                "656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c",
+                b"\x01" + b"\x05" + b"\x00\x00\x00\x00" + b"\x06" + b"\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c" + b"\x00" * 65,
+                5, 6, "656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c",
             )
         ],
     )
@@ -501,11 +358,7 @@ class TestFdcSubmit:
         "payload, n_requests, bit_vector",
         [
             (b"\x00\x05\x0b", 5, [False, True, False, True, True]),
-            (
-                b"\x00\x09\x6c",
-                9,
-                [False, False, True, True, False, True, True, False, False],
-            ),
+            (b"\x00\x09\x6c", 9, [False, False, True, True, False, True, True, False, False]),
         ],
     )
     def test_fdc_submit2(self, payload, n_requests, bit_vector):
@@ -527,15 +380,8 @@ class TestFdcSubmit:
         "payload, protocol_id, random_quality_score, merkle_root",
         [
             (
-                b"\x01"
-                + b"\x05"
-                + b"\x00\x00\x00\x00"
-                + b"\x06"
-                + b"\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c"
-                + b"\x00" * 65,
-                5,
-                6,
-                "656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c",
+                b"\x01" + b"\x05" + b"\x00\x00\x00\x00" + b"\x06" + b"\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c" + b"\x00" * 65,
+                5, 6, "656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c",
             )
         ],
     )
