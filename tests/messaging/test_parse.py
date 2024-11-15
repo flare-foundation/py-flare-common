@@ -34,18 +34,8 @@ class TestSubmit:
         "payload, type, message_to_parse, v, r, s",
         [
             (
-                b"\x01"
-                + b"\x00" * 38
-                + b"\x01"
-                + b"\x02"
-                + b"\x00" * 31
-                + b"\x03"
-                + b"\x00" * 31,
-                1,
-                b"\x00" * 38,
-                "01",
-                "02" + "0" * 62,
-                "03" + "0" * 62,
+                b"\x01" + b"\x00" * 38 + b"\x01" + b"\x02" + b"\x00" * 31 + b"\x03" + b"\x00" * 31,
+                1, b"\x00" * 38, "01", "02" + "0" * 62, "03" + "0" * 62,
             )
         ],
     )
@@ -62,21 +52,8 @@ class TestSubmit:
     @pytest.mark.parametrize(
         "payload",
         [
-            b"\x01"
-            + b"\x00" * 38
-            + b"\x01"
-            + b"\x02"
-            + b"\x00" * 31
-            + b"\x03"
-            + b"\x00" * 31
-            + b"\x00",
-            b"\x01"
-            + b"\x00" * 38
-            + b"\x01"
-            + b"\x02"
-            + b"\x00" * 31
-            + b"\x03"
-            + b"\x00" * 30,
+            b"\x01" + b"\x00" * 38 + b"\x01" + b"\x02" + b"\x00" * 31 + b"\x03" + b"\x00" * 31 + b"\x00",
+            b"\x01" + b"\x00" * 38 + b"\x01" + b"\x02" + b"\x00" * 31 + b"\x03" + b"\x00" * 30,
         ],
     )
     def test_submit_signature_wrong_data(self, payload):
@@ -273,6 +250,7 @@ class TestSubmit:
         assert isinstance(ftsoS1, FtsoSubmit1)
         assert ftsoS1.commit_hash == hash
 
+    # Real life example: https://flare-systems-explorer.flare.network/top-level-protocol/8c15583a670ba385c82ff9aed3f4b3244815f0b6c700654b46a1298769afd413
     @pytest.mark.parametrize(
         "message, protocol_id, voting_round_id, size, random, values",
         [
