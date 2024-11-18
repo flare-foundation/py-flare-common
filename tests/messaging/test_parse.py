@@ -1,5 +1,6 @@
 import pytest
 
+from py_flare_common._hexstr.hexstr import to_bytes
 from py_flare_common.fsp.messaging.byte_parser import ParseError
 from py_flare_common.fsp.messaging.parse import (
     _submit_signature,
@@ -26,7 +27,6 @@ from py_flare_common.fsp.messaging.types import (
     Signature,
     SubmitSignature,
 )
-from py_flare_common.merkle.hexstr import to_bytes
 
 
 class TestSubmit:
@@ -38,7 +38,7 @@ class TestSubmit:
                 1, b"\x00" * 38, "01", "02" + "0" * 62, "03" + "0" * 62,
             )
         ],
-    )
+    )  # fmt: skip
     def test_submit_signature(self, payload, message_to_parse, type, v, r, s):
         type_p, message_to_parse_p, signature_p = _submit_signature(payload)
 
@@ -55,7 +55,7 @@ class TestSubmit:
             b"\x01" + b"\x00" * 38 + b"\x01" + b"\x02" + b"\x00" * 31 + b"\x03" + b"\x00" * 31 + b"\x00",
             b"\x01" + b"\x00" * 38 + b"\x01" + b"\x02" + b"\x00" * 31 + b"\x03" + b"\x00" * 30,
         ],
-    )
+    )  # fmt: skip
     def test_submit_signature_wrong_data(self, payload):
         with pytest.raises(ParseError):
             _submit_signature(payload)
@@ -76,10 +76,10 @@ class TestSubmit:
                 1, 2, b"\x00\x00", 2, 2, b"\x00\x01",
             ),
         ],
-    )
+    )  # fmt: skip
     def test_gen_parse(
         self, message, voting_round_id_ftso, payload_length_ftso, payload_ftso, voting_round_id_fdc, payload_length_fdc, payload_fdc,
-    ):
+    ):  # fmt: skip
         parsed_message = parse_generic_tx(
             message, lambda x: x + b"100", lambda x: x + b"200"
         )
@@ -120,7 +120,7 @@ class TestSubmit:
                 200, 1, 2, b"\x00\x00",
             ),
         ],
-    )
+    )  # fmt: skip
     def test_gen_parse_only_one_protocol(
         self, message, protocol_id, voting_round_id, payload_length, payload
     ):
@@ -159,7 +159,7 @@ class TestSubmit:
             (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\xc0\x00") + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x02" + b"\x00\xc1") + (b"d" + b"\x00\x00\x00\x01" + b"\x00\x02" + b"\x00\x00") + (b"\xc8" + b"\x00\x00\x00\x02" + b"\x00\x01" + b"\x00\x01"),
             b"d\x00\x00\x00\x01\x00\x02\x00".hex(),
         ],
-    )
+    )  # fmt: skip
     def test_gen_parse_error(self, message):
         with pytest.raises(ParseError):
             parse_generic_tx(message)
@@ -183,7 +183,7 @@ class TestSubmit:
                 bytes.fromhex("05a93355a28127ff0ca2d8136648c1fd682e0041f8367ba4567586b3d4149d54"),
             )
         ],
-    )
+    )  # fmt: skip
     def test_parse_submit1_tx(self, message, protocol_id, voting_round_id, size, hash):
         parsed_payload = parse_submit1_tx(message)
         assert isinstance(parsed_payload, ParsedMessage)
@@ -210,7 +210,7 @@ class TestSubmit:
                 [1742399, 57290, 14780, 62533, 517557, 3346908, 4399634, 6289337, 38967, 8995599, 99999, 39275, 511353, 59441, 2240545, 3218580, 162862, 131089, 411684, 14510, 71649, 610821, 858892, 117501, 775635, 1356035, 8161628, 523521, 78074, 89028, 235422, 37656, 41399, 6333367, 702484, 567521, 56200, 25950, 2185507, 344217, 5448757, 542774, 17912, 865380, 99989, 100069, 414736, 30251, 124206, 69611],
             )
         ],
-    )
+    )  # fmt: skip
     def test_parse_submit2_tx(
         self, message, protocol_id, voting_round_id, size, random, values
     ):
@@ -240,10 +240,10 @@ class TestSubmit:
                 100, 1, "200163ea6a576ea7fc46557b8611339d01e9b0d832d80060f892e02afe770012",
             )
         ],
-    )
+    )  # fmt: skip
     def test_parse_submit_signature_tx(
         self, message, protocol_id, voting_round_id, size, type, v, r, s, mess_protocol_id, random_quality_score, merkle_root,
-    ):
+    ):  # fmt: skip
         parsed_payload = parse_submit_signature_tx(message)
         assert isinstance(parsed_payload, ParsedMessage)
 
@@ -280,7 +280,7 @@ class TestFtsoSubmit:
             b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
             b"\x48\x65\x6c\x6c\x6f\x48\x65\x6c\x6c\x6f\x48\x65\x6c\x6c\x6f\x48\x65\x6c\x6c\x6f\x00\x48\x65\x6c\x6c\x6f\x00\x48\x65\x6c\x6c\x6f",
         ],
-    )
+    )  # fmt: skip
     def test_ftso_submit1(self, payload):
         ftsoS1 = ftso_submit1(payload)
         assert isinstance(ftsoS1, FtsoSubmit1)
@@ -293,7 +293,7 @@ class TestFtsoSubmit:
             b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
             b"\x48\x65\x6c\x6c\x6f\x48\x65\x6c\x6c\x6f\x48\x65\x6c\x6c\x6f\x48\x65\x6c\x6c\x6f\x00\x48\x65\x6c\x6c\x6f\x00\x48\x65\x6c\x6c\x6f\x00",
         ],
-    )
+    )  # fmt: skip
     def test_ftso_submit1_wrong_length(self, payload):
         with pytest.raises(ParseError):
             ftso_submit1(payload)
@@ -307,7 +307,7 @@ class TestFtsoSubmit:
                 [123456789 - 2**31, None],
             )
         ],
-    )
+    )  # fmt: skip
     def test_ftso_submit2(self, payload, random, values):
         ftsoS2 = ftso_submit2(payload)
 
@@ -318,7 +318,7 @@ class TestFtsoSubmit:
     @pytest.mark.parametrize(
         "payload",
         [b"12345678901234567890123456789012\x07[\xcd\x15\x00\x00\x00\x00\x00"],
-    )
+    )  # fmt: skip
     def test_ftso_submit2_parse_error(self, payload):
         with pytest.raises(ParseError):
             ftso_submit2(payload)
@@ -331,7 +331,7 @@ class TestFtsoSubmit:
                 5, 6, "656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c",
             )
         ],
-    )
+    )  # fmt: skip
     def test_ftso_submit_signature(
         self, payload, protocol_id, random_quality_score, merkle_root
     ):
@@ -360,7 +360,7 @@ class TestFdcSubmit:
             (b"\x00\x05\x0b", 5, [False, True, False, True, True]),
             (b"\x00\x09\x6c", 9, [False, False, True, True, False, True, True, False, False]),
         ],
-    )
+    )  # fmt: skip
     def test_fdc_submit2(self, payload, n_requests, bit_vector):
         fdcS2 = fdc_submit2(payload)
 
@@ -384,7 +384,7 @@ class TestFdcSubmit:
                 5, 6, "656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c656c",
             )
         ],
-    )
+    )  # fmt: skip
     def test_fdc_submit_signature(
         self, payload, protocol_id, random_quality_score, merkle_root
     ):
