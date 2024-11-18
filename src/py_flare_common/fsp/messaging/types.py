@@ -2,6 +2,8 @@ from typing import Generic, TypeVar
 
 from attrs import frozen
 
+__all__ = []
+
 T = TypeVar("T")
 U = TypeVar("U")
 

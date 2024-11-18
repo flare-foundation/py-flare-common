@@ -2,6 +2,13 @@ from ...epoch import RewardEpoch, VotingEpoch
 from ...factory import RewardEpochFactory, VotingEpochFactory
 from ..config import songbird_chain_config
 
+__all__ = [
+    "voting_epoch",
+    "reward_epoch",
+    "voting_epoch_factory",
+    "reward_epoch_factory",
+]
+
 voting_epoch_factory = VotingEpochFactory(
     first_epoch_epoc=songbird_chain_config.voting_first_epoch_epoc,
     epoch_duration=songbird_chain_config.voting_epoch_duration,

@@ -1,3 +1,6 @@
+__all__ = ["encode_update_array"]
+
+
 def encode_update_array(deltas: list[int]) -> list[int]:
     update_array = []
 

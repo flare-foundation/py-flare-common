@@ -1,7 +1,9 @@
 from eth_abi.abi import encode
 from eth_hash.auto import keccak
 
-from .hexstr import is_hex_str, prefix_0x, un_prefix_0x
+from .._hexstr.hexstr import is_hex_str, prefix_0x, un_prefix_0x
+
+__all__ = ["single_hash", "MerkleTree"]
 
 
 def single_hash(value: str | bytes) -> str:

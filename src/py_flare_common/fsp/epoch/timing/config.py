@@ -1,5 +1,7 @@
 from attrs import frozen
 
+__all__ = []
+
 
 @frozen
 class ChainConfig:

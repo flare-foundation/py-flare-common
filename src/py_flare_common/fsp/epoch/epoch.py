@@ -11,6 +11,13 @@ if TYPE_CHECKING:
     )
 
 
+__all__ = [
+    "Epoch",
+    "VotingEpoch",
+    "RewardEpoch",
+]
+
+
 @total_ordering
 @frozen
 class Epoch:

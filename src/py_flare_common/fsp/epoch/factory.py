@@ -4,6 +4,12 @@ from attrs import frozen
 
 from .epoch import Epoch, RewardEpoch, VotingEpoch
 
+__all__ = [
+    "Factory",
+    "VotingEpochFactory",
+    "RewardEpochFactory",
+]
+
 
 @frozen
 class Factory:

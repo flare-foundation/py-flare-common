@@ -1,5 +1,7 @@
 from attrs import Attribute, field, frozen
 
+__all__ = ["FtsoFeed"]
+
 
 @frozen
 class FtsoFeed:

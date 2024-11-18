@@ -1,6 +1,6 @@
 from typing import Callable
 
-from py_flare_common.merkle.hexstr import to_bytes
+from py_flare_common._hexstr.hexstr import to_bytes
 
 from .byte_parser import ByteParser, ParseError
 from .types import (
@@ -17,6 +17,13 @@ from .types import (
     T,
     U,
 )
+
+__all__ = [
+    "parse_generic_tx",
+    "parse_submit1_tx",
+    "parse_submit2_tx",
+    "parse_submit_signature_tx",
+]
 
 
 def _default_parse(b: bytes) -> bytes:
