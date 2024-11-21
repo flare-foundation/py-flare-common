@@ -12,7 +12,7 @@ authors = [
 ]
 description = "Python modules that are used across multiple Flare projects."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
