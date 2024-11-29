@@ -5,10 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 dynamic = [ "dependencies" ]
 name = "py-flare-common"
-version = "0.0.4"
+version = "0.1.0"
 authors = [
   { name="Matej Janezic", email="matej@flare.network" },
   { name="Luka Avbreht", email="luka@flare.network" },
+  { name="Andraz Maier", email="andraz.maier@flare.network" },
 ]
 description = "Python modules that are used across multiple Flare projects."
 readme = "README.md"
