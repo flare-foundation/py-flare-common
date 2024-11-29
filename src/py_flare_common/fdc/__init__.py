@@ -1,7 +1,7 @@
-from .attestation_source import AttestatioSource
-from .attestation_type import AttestatioType
+from .attestation_source import AttestationSource
+from .attestation_type import AttestationType
 
 __all__ = [
-    "AttestatioType",
-    "AttestatioSource",
+    "AttestationType",
+    "AttestationSource",
 ]

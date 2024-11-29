@@ -1,6 +1,6 @@
 import pytest
 
-from py_flare_common.fdc.attestation_source import AttestatioSource
+from py_flare_common.fdc.attestation_source import AttestationSource
 
 
 @pytest.mark.parametrize(
@@ -15,7 +15,7 @@ from py_flare_common.fdc.attestation_source import AttestatioSource
     ],
 )
 def test_attestation_source_init(source_id):
-    ats = AttestatioSource(source_id)
+    ats = AttestationSource(source_id)
     assert ats.source_id == source_id
 
 
@@ -31,7 +31,7 @@ def test_attestation_source_init(source_id):
     ],
 )
 def test_representation(source_id, representation):
-    ats = AttestatioSource(source_id)
+    ats = AttestationSource(source_id)
     assert ats.representation == representation
 
 
@@ -47,7 +47,7 @@ def test_representation(source_id, representation):
     ],
 )
 def test_from_representation(source_id, representation):
-    ats = AttestatioSource.from_represenation(representation)
+    ats = AttestationSource.from_represenation(representation)
     assert ats.source_id == source_id
 
 
@@ -58,5 +58,5 @@ def test_from_representation(source_id, representation):
     ],
 )
 def test_from_hexstr(hexstr):
-    ats = AttestatioSource.fromhex(hexstr)
+    ats = AttestationSource.fromhex(hexstr)
     assert ats.source_id == bytes.fromhex(hexstr)

@@ -1,13 +1,13 @@
 from attrs import Attribute, field, frozen
 
-__all__ = ["AttestatioSource"]
+__all__ = ["AttestationSource"]
 
 
 @frozen
-class AttestatioSource:
+class AttestationSource:
     @staticmethod
     def _length_validation(
-        instance: "AttestatioSource", attribute: Attribute, value: bytes
+        instance: "AttestationSource", attribute: Attribute, value: bytes
     ):
         if len(value) != 32:
             raise ValueError(f"{attribute.name} must have exactly 32 bytes.")

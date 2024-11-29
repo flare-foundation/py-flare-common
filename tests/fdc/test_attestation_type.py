@@ -1,6 +1,6 @@
 import pytest
 
-from py_flare_common.fdc.attestation_type import AttestatioType
+from py_flare_common.fdc.attestation_type import AttestationType
 
 
 @pytest.mark.parametrize(
@@ -15,7 +15,7 @@ from py_flare_common.fdc.attestation_type import AttestatioType
     ],
 )
 def test_attestation_type_init(attestation_type):
-    at = AttestatioType(attestation_type)
+    at = AttestationType(attestation_type)
     assert at.attestation_type == attestation_type
 
 
@@ -31,7 +31,7 @@ def test_attestation_type_init(attestation_type):
     ],
 )
 def test_representation(attestation_type, representation):
-    at = AttestatioType(attestation_type)
+    at = AttestationType(attestation_type)
     assert at.representation == representation
 
 
@@ -47,7 +47,7 @@ def test_representation(attestation_type, representation):
     ],
 )
 def test_from_representation(attestation_type, representation):
-    at = AttestatioType.from_represenation(representation)
+    at = AttestationType.from_represenation(representation)
     assert at.attestation_type == attestation_type
 
 
@@ -58,5 +58,5 @@ def test_from_representation(attestation_type, representation):
     ],
 )
 def test_from_hexstr(hexstr):
-    at = AttestatioType.fromhex(hexstr)
+    at = AttestationType.fromhex(hexstr)
     assert at.attestation_type == bytes.fromhex(hexstr)
