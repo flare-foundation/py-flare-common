@@ -1,4 +1,4 @@
-from typing import Callable
+from collections.abc import Callable
 
 from py_flare_common._hexstr.hexstr import to_bytes
 
