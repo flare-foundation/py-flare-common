@@ -44,6 +44,12 @@ def test_representation(source_id, representation):
             ),
             "testBTC",
         ),
+        (
+            bytes.fromhex(
+                "74657374444f4745000000000000000000000000000000000000000000000000"
+            ),
+            "testDOGE",
+        ),
     ],
 )
 def test_from_representation(source_id, representation):
