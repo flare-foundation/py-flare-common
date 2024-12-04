@@ -105,12 +105,16 @@ def fdc_submit2(payload: bytes) -> FdcSubmit2:
     bp = ByteParser(payload)
     n_requests = bp.uint16()
 
-    _bit_vector = bin(int(bp.drain().hex(), base=16))[2:]
-    bit_vector = [char == "1" for char in _bit_vector]
-    bit_vector = [False for _ in range(n_requests - len(_bit_vector))] + bit_vector
+    votes = bp.drain()
+    bit_vector = [False for _ in range(n_requests)]
 
-    if len(bit_vector) != n_requests:
-        raise ParseError("Invalid payload length.")
+    for j, byte in enumerate(reversed(votes)):
+        for shift in range(8):
+            i = n_requests - 1 - j * 8 - shift
+            if i < 0 and (byte >> shift) & 1 == 1:
+                raise ParseError("Invalid payload length.")
+            elif i >= 0:
+                bit_vector[i] = (byte >> shift) & 1 == 1
 
     return FdcSubmit2(
         number_of_requests=n_requests,

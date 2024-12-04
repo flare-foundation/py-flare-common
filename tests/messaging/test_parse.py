@@ -359,6 +359,14 @@ class TestFdcSubmit:
         [
             (b"\x00\x05\x0b", 5, [False, True, False, True, True]),
             (b"\x00\x09\x6c", 9, [False, False, True, True, False, True, True, False, False]),
+            (b"\x00\x01\x01", 1, [True]),
+            (b"\x00\x01", 1, [False]),
+            (b"\x00\x10\xff\xff", 16, [True]*16),
+            (b"\x00\x11\xff\xff", 17, [False] + [True]*16),
+            (b"\x00\x11", 17, [False]*17),
+            (b"\x00\x11\x00", 17, [False]*17),
+            (b"\x00\x11\x0b\x0b", 17, [False, False, False, False, False, True, False, True, True, False, False, False, False, True, False, True, True]),
+            (b"\x00\x0F\x6c\x0b", 15, [True, True, False, True, True, False, False, False, False, False, False, True, False, True, True]),
         ],
     )  # fmt: skip
     def test_fdc_submit2(self, payload, n_requests, bit_vector):
