@@ -50,6 +50,12 @@ def test_representation(source_id, representation):
             ),
             "testDOGE",
         ),
+        (
+            bytes.fromhex(
+                "7465737458525000000000000000000000000000000000000000000000000000"
+            ),
+            "testXRP",
+        ),
     ],
 )
 def test_from_representation(source_id, representation):

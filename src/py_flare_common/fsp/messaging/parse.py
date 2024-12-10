@@ -4,16 +4,15 @@ from py_flare_common._hexstr.hexstr import to_bytes
 
 from .byte_parser import ByteParser, ParseError
 from .types import (
-    FdcMessage,
     FdcSubmit1,
     FdcSubmit2,
-    FtsoMessage,
     FtsoSubmit1,
     FtsoSubmit2,
     ParsedMessage,
     ParsedPayload,
     Signature,
-    SubmitSignature,
+    SubmitSignatures,
+    SubmitSignaturesMessage,
     T,
     U,
 )
@@ -70,8 +69,8 @@ def parse_submit2_tx(message: bytes | str) -> ParsedMessage[FtsoSubmit2, FdcSubm
 
 def parse_submit_signature_tx(
     message: bytes | str,
-) -> ParsedMessage[SubmitSignature[FtsoMessage], SubmitSignature[FdcMessage]]:
-    return parse_generic_tx(message, ftso_submit_signature, fdc_submit_signature)
+) -> ParsedMessage[SubmitSignatures, SubmitSignatures]:
+    return parse_generic_tx(message, submit_signatures, submit_signatures)
 
 
 def ftso_submit1(payload: bytes) -> FtsoSubmit1:
@@ -122,66 +121,70 @@ def fdc_submit2(payload: bytes) -> FdcSubmit2:
     )
 
 
-def _submit_signature(payload: bytes) -> tuple[int, bytes, Signature]:
+def submit_signatures_type_0(payload: bytes) -> SubmitSignatures:
     payload_bp = ByteParser(payload)
-
-    type = payload_bp.uint8()
     message_to_parse = payload_bp.next_n(38)
     signature_to_parse = payload_bp.next_n(65)
-    if not payload_bp.is_empty():
-        raise ParseError("Invalid payload length: expected 104 bytes.")
+    unsignedMessage = payload_bp.drain()
+
+    message_bp = ByteParser(message_to_parse)
+    protocol_id = message_bp.uint8()
+    message_bp.next_n(4)
+    random_quality_score = message_bp.uint8()
+    merkle_root = message_bp.drain().hex()
+
+    message = SubmitSignaturesMessage(
+        protocol_id=protocol_id,
+        random_quality_score=random_quality_score,
+        merkle_root=merkle_root,
+    )
 
     signature_bp = ByteParser(signature_to_parse)
     v = signature_bp.next_n(1).hex()
     r = signature_bp.next_n(32).hex()
     s = signature_bp.next_n(32).hex()
-    if not signature_bp.is_empty():
-        raise ParseError("Invalid payload length: expected 65 bytes.")
 
     signature = Signature(v=v, r=r, s=s)
 
-    return type, message_to_parse, signature
-
-
-def ftso_submit_signature(payload: bytes) -> SubmitSignature[FtsoMessage]:
-    type, message_to_parse, signature = _submit_signature(payload)
-
-    message_bp = ByteParser(message_to_parse)
-    protocol_id = message_bp.uint8()
-    message_bp.next_n(4)
-    random_quality_score = message_bp.uint8()
-    merkle_root = message_bp.drain().hex()
-
-    message = FtsoMessage(
-        protocol_id=protocol_id,
-        random_quality_score=random_quality_score,
-        merkle_root=merkle_root,
-    )
-
-    return SubmitSignature(
-        type=type,
+    return SubmitSignatures(
+        type=0,
         message=message,
         signature=signature,
+        unsignedMessage=unsignedMessage,
     )
 
 
-def fdc_submit_signature(payload: bytes) -> SubmitSignature[FdcMessage]:
-    type, message_to_parse, signature = _submit_signature(payload)
+def submit_signatures_type_1(payload: bytes) -> SubmitSignatures:
+    payload_bp = ByteParser(payload)
+    signature_to_parse = payload_bp.next_n(65)
+    unsignedMessage = payload_bp.drain()
 
-    message_bp = ByteParser(message_to_parse)
-    protocol_id = message_bp.uint8()
-    message_bp.next_n(4)
-    random_quality_score = message_bp.uint8()
-    merkle_root = message_bp.drain().hex()
+    signature_bp = ByteParser(signature_to_parse)
+    v = signature_bp.next_n(1).hex()
+    r = signature_bp.next_n(32).hex()
+    s = signature_bp.next_n(32).hex()
 
-    message = FdcMessage(
-        protocol_id=protocol_id,
-        random_quality_score=random_quality_score,
-        merkle_root=merkle_root,
-    )
+    signature = Signature(v=v, r=r, s=s)
 
-    return SubmitSignature(
-        type=type,
-        message=message,
+    return SubmitSignatures(
+        type=1,
+        message=None,
         signature=signature,
+        unsignedMessage=unsignedMessage,
     )
+
+
+def submit_signatures(payload: bytes) -> SubmitSignatures:
+    payload_bp = ByteParser(payload)
+    type = payload_bp.uint8()
+    rest_of_payload = payload_bp.drain()
+
+    match type:
+        case 0:
+            return submit_signatures_type_0(rest_of_payload)
+        case 1:
+            return submit_signatures_type_1(rest_of_payload)
+        case _:
+            raise Exception(
+                f"Version {type} of SubmitSignatures payload is not defined."
+            )

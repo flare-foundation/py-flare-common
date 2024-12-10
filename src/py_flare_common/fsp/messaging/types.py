@@ -45,14 +45,7 @@ class FdcSubmit2:
 
 
 @frozen
-class FtsoMessage:
-    protocol_id: int
-    random_quality_score: int
-    merkle_root: str
-
-
-@frozen
-class FdcMessage:
+class SubmitSignaturesMessage:
     protocol_id: int
     random_quality_score: int
     merkle_root: str
@@ -66,7 +59,8 @@ class Signature:
 
 
 @frozen
-class SubmitSignature(Generic[T]):
+class SubmitSignatures:
     type: int
-    message: T
+    message: SubmitSignaturesMessage | None
     signature: Signature
+    unsignedMessage: bytes
