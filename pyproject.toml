@@ -37,6 +37,7 @@ select = [
     'C',    # flake8-comprehensions
     'DTZ',  # flake8-datetimez
     'RUF',  # ruff
+    'N',    # pep8-naming
 ]
 
 ignore = [
