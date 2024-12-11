@@ -164,9 +164,9 @@ class TestSubmit:
         assert ftso.voting_round_id == voting_round_id
         assert ftso.size == size
 
-        ftsoS1 = ftso.payload
-        assert isinstance(ftsoS1, FtsoSubmit1)
-        assert ftsoS1.commit_hash == hash
+        ftso_s1 = ftso.payload
+        assert isinstance(ftso_s1, FtsoSubmit1)
+        assert ftso_s1.commit_hash == hash
 
     # Real life example: https://flare-systems-explorer.flare.network/top-level-protocol/a65e3db73be6760559c2c13310bd0c3d8f2e456ea42a96838d3fc7f90bf33594
     @pytest.mark.parametrize(
@@ -193,10 +193,10 @@ class TestSubmit:
         assert ftso.voting_round_id == voting_round_id
         assert ftso.size == size
 
-        ftsoS1 = ftso.payload
-        assert isinstance(ftsoS1, FtsoSubmit2)
-        assert ftsoS1.random == random
-        assert ftsoS1.values == values
+        ftso_s1 = ftso.payload
+        assert isinstance(ftso_s1, FtsoSubmit2)
+        assert ftso_s1.random == random
+        assert ftso_s1.values == values
 
     @pytest.mark.parametrize(
         "message, protocol_id, voting_round_id, size, type, v, r, s, mess_protocol_id, random_quality_score, merkle_root",
@@ -222,28 +222,28 @@ class TestSubmit:
         assert ftso.voting_round_id == voting_round_id
         assert ftso.size == size
 
-        ftsoS1 = ftso.payload
-        assert isinstance(ftsoS1, SubmitSignatures)
-        assert ftsoS1.type == type
+        ftso_s1 = ftso.payload
+        assert isinstance(ftso_s1, SubmitSignatures)
+        assert ftso_s1.type == type
 
-        ftso_signature = ftsoS1.signature
+        ftso_signature = ftso_s1.signature
         assert isinstance(ftso_signature, Signature)
         assert ftso_signature.v == v
         assert ftso_signature.r == r
         assert ftso_signature.s == s
 
-        ftso_message = ftsoS1.message
+        ftso_message = ftso_s1.message
         assert isinstance(ftso_message, SubmitSignaturesMessage)
         assert ftso_message.protocol_id == mess_protocol_id
         assert ftso_message.merkle_root == merkle_root
         assert ftso_message.random_quality_score == random_quality_score
 
-        assert ftsoS1.unsignedMessage == b""
+        assert ftso_s1.unsigned_message == b""
 
     # https://coston-systems-explorer.flare.rocks/top-level-protocol/0x5d83c1f3f8ecf72946fafb8cebd0816b8f06fd2d158683b580466ec741741966
     @pytest.mark.parametrize(
-        "message, fdc_protocol_id, fdc_voting_round_id, fdc_size, fdc_type, fdc_message, fdc_v, fdc_r, fdc_s, fdc_unsignedMessage, "
-        + "ftso_protocol_id, ftso_voting_round_id, ftso_size, ftso_type, ftso_m_protocol_id, ftso_m_random_quality_score, ftso_m_merkle_root, ftso_v, ftso_r, ftso_s, ftso_unsignedMessage",
+        "message, fdc_protocol_id, fdc_voting_round_id, fdc_size, fdc_type, fdc_message, fdc_v, fdc_r, fdc_s, fdc_unsigned_message, "
+        + "ftso_protocol_id, ftso_voting_round_id, ftso_size, ftso_type, ftso_m_protocol_id, ftso_m_random_quality_score, ftso_m_merkle_root, ftso_v, ftso_r, ftso_s, ftso_unsigned_message",
         [
             (
                 "0x57eed58064000cc47a00680064000cc47a01d3c1e3864d0b0da28fe5093b667d477062424820fa2feeabf958ba0f1b2324611b3af8d6e1ee5b98db8c6036a131595195ccfd7a97153f0672188057f0bcb6a29a1682f51a950ac9e3f35187c1c86ce7469145fece42c87eec592415f92254dc0bc8000cc47a0045011c3ce1bcea504f167586c19d8c50e71564c7aa5557125d34b07894594a36335feb2f57308692549f4cf67bcacacfb8bb743db6234659d6fead735a9d09a3e0d4b00008ff"[10:],
@@ -253,7 +253,7 @@ class TestSubmit:
         ],
     )  # fmt: skip
     def test_parse_submit_signature_tx_type_0_and_1(
-        self, message, fdc_protocol_id, fdc_voting_round_id, fdc_size, fdc_type, fdc_message, fdc_v, fdc_r, fdc_s, fdc_unsignedMessage, ftso_protocol_id, ftso_voting_round_id, ftso_size, ftso_type, ftso_m_protocol_id, ftso_m_random_quality_score, ftso_m_merkle_root, ftso_v, ftso_r, ftso_s, ftso_unsignedMessage,
+        self, message, fdc_protocol_id, fdc_voting_round_id, fdc_size, fdc_type, fdc_message, fdc_v, fdc_r, fdc_s, fdc_unsigned_message, ftso_protocol_id, ftso_voting_round_id, ftso_size, ftso_type, ftso_m_protocol_id, ftso_m_random_quality_score, ftso_m_merkle_root, ftso_v, ftso_r, ftso_s, ftso_unsigned_message,
     ):  # fmt: skip
         parsed_payload = parse_submit_signature_tx(message)
         assert isinstance(parsed_payload, ParsedMessage)
@@ -264,19 +264,19 @@ class TestSubmit:
         assert fdc.voting_round_id == fdc_voting_round_id
         assert fdc.size == fdc_size
 
-        fdcS1 = fdc.payload
-        assert isinstance(fdcS1, SubmitSignatures)
-        assert fdcS1.type == fdc_type
+        fdc_s1 = fdc.payload
+        assert isinstance(fdc_s1, SubmitSignatures)
+        assert fdc_s1.type == fdc_type
 
-        fdc_signature = fdcS1.signature
+        fdc_signature = fdc_s1.signature
         assert isinstance(fdc_signature, Signature)
         assert fdc_signature.v == fdc_v
         assert fdc_signature.r == fdc_r
         assert fdc_signature.s == fdc_s
 
-        assert fdcS1.message == fdc_message
+        assert fdc_s1.message == fdc_message
 
-        assert fdcS1.unsignedMessage == fdc_unsignedMessage
+        assert fdc_s1.unsigned_message == fdc_unsigned_message
 
         ftso = parsed_payload.ftso
         assert isinstance(ftso, ParsedPayload)
@@ -284,26 +284,26 @@ class TestSubmit:
         assert ftso.voting_round_id == ftso_voting_round_id
         assert ftso.size == ftso_size
 
-        ftsoS1 = ftso.payload
-        assert isinstance(ftsoS1, SubmitSignatures)
-        assert ftsoS1.type == ftso_type
+        ftso_s1 = ftso.payload
+        assert isinstance(ftso_s1, SubmitSignatures)
+        assert ftso_s1.type == ftso_type
 
-        ftso_signature = ftsoS1.signature
+        ftso_signature = ftso_s1.signature
         assert isinstance(ftso_signature, Signature)
         assert ftso_signature.v == ftso_v
         assert ftso_signature.r == ftso_r
         assert ftso_signature.s == ftso_s
 
-        ftso_message = ftsoS1.message
+        ftso_message = ftso_s1.message
         assert isinstance(ftso_message, SubmitSignaturesMessage)
         assert ftso_message.protocol_id == ftso_m_protocol_id
         assert ftso_message.merkle_root == ftso_m_merkle_root
         assert ftso_message.random_quality_score == ftso_m_random_quality_score
 
-        assert ftsoS1.unsignedMessage == ftso_unsignedMessage
+        assert ftso_s1.unsigned_message == ftso_unsigned_message
 
     @pytest.mark.parametrize(
-        "payload, protocol_id, random_quality_score, merkle_root, v, r, s, unsignedMessage",
+        "payload, protocol_id, random_quality_score, merkle_root, v, r, s, unsigned_message",
         [
             (
                 b"\x64" + b"\x00\x00\x00\x00" + b"\x06" + b"\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c\x65\x6c" + b"\x01" + b"\x02" * 32 + b"\x03" * 32 + b"\x00\x01",
@@ -315,7 +315,7 @@ class TestSubmit:
             )
         ],
     )  # fmt: skip
-    def test_submit_signatures_type_0(self, payload, protocol_id, random_quality_score, merkle_root, v, r, s, unsignedMessage):  # fmt: skip
+    def test_submit_signatures_type_0(self, payload, protocol_id, random_quality_score, merkle_root, v, r, s, unsigned_message):  # fmt: skip
         sst0 = submit_signatures_type_0(payload)
         assert isinstance(sst0, SubmitSignatures)
         assert sst0.type == 0
@@ -327,10 +327,10 @@ class TestSubmit:
         assert sst0.signature.v == v
         assert sst0.signature.r == r
         assert sst0.signature.s == s
-        assert sst0.unsignedMessage == unsignedMessage
+        assert sst0.unsigned_message == unsigned_message
 
     @pytest.mark.parametrize(
-        "payload, v, r, s, unsignedMessage",
+        "payload, v, r, s, unsigned_message",
         [
             (
                 b"\x01" + b"\x02" * 32 + b"\x03" * 32 + b"\x00\x01",
@@ -342,7 +342,7 @@ class TestSubmit:
             )
         ],
     )  # fmt: skip
-    def test_submit_signatures_type_1(self, payload, v, r, s, unsignedMessage):  # fmt: skip
+    def test_submit_signatures_type_1(self, payload, v, r, s, unsigned_message):  # fmt: skip
         sst1 = submit_signatures_type_1(payload)
         assert isinstance(sst1, SubmitSignatures)
         assert sst1.type == 1
@@ -351,7 +351,7 @@ class TestSubmit:
         assert sst1.signature.v == v
         assert sst1.signature.r == r
         assert sst1.signature.s == s
-        assert sst1.unsignedMessage == unsignedMessage
+        assert sst1.unsigned_message == unsigned_message
 
 
 class TestFtsoSubmit:
@@ -364,9 +364,9 @@ class TestFtsoSubmit:
         ],
     )  # fmt: skip
     def test_ftso_submit1(self, payload):
-        ftsoS1 = ftso_submit1(payload)
-        assert isinstance(ftsoS1, FtsoSubmit1)
-        assert ftsoS1.commit_hash == payload
+        ftso_s1 = ftso_submit1(payload)
+        assert isinstance(ftso_s1, FtsoSubmit1)
+        assert ftso_s1.commit_hash == payload
 
     @pytest.mark.parametrize(
         "payload",
@@ -391,11 +391,11 @@ class TestFtsoSubmit:
         ],
     )  # fmt: skip
     def test_ftso_submit2(self, payload, random, values):
-        ftsoS2 = ftso_submit2(payload)
+        ftso_s2 = ftso_submit2(payload)
 
-        assert isinstance(ftsoS2, FtsoSubmit2)
-        assert ftsoS2.random == random
-        assert ftsoS2.values == values
+        assert isinstance(ftso_s2, FtsoSubmit2)
+        assert ftso_s2.random == random
+        assert ftso_s2.values == values
 
     @pytest.mark.parametrize(
         "payload",
@@ -412,8 +412,8 @@ class TestFdcSubmit:
             fdc_submit1(b"\x00")
 
     def test_fdc_submit1_empty_payload(self):
-        fdc_S1 = fdc_submit1(b"")
-        assert isinstance(fdc_S1, FdcSubmit1)
+        fdc_s1 = fdc_submit1(b"")
+        assert isinstance(fdc_s1, FdcSubmit1)
 
     @pytest.mark.parametrize(
         "payload, n_requests, bit_vector",
@@ -431,11 +431,11 @@ class TestFdcSubmit:
         ],
     )  # fmt: skip
     def test_fdc_submit2(self, payload, n_requests, bit_vector):
-        fdcS2 = fdc_submit2(payload)
+        fdc_s2 = fdc_submit2(payload)
 
-        assert isinstance(fdcS2, FdcSubmit2)
-        assert fdcS2.number_of_requests == n_requests
-        assert fdcS2.bit_vector == bit_vector
+        assert isinstance(fdc_s2, FdcSubmit2)
+        assert fdc_s2.number_of_requests == n_requests
+        assert fdc_s2.bit_vector == bit_vector
 
     @pytest.mark.parametrize(
         "payload",

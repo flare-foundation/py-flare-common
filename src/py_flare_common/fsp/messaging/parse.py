@@ -25,6 +25,9 @@ __all__ = [
 ]
 
 
+EMPTY_FEED_VALUE = "0" * 8
+
+
 def _default_parse(b: bytes) -> bytes:
     return b
 
@@ -86,8 +89,6 @@ def fdc_submit1(payload: bytes) -> FdcSubmit1:
 
 
 def ftso_submit2(payload: bytes) -> FtsoSubmit2:
-    EMPTY_FEED_VALUE = "0" * 8
-
     bp = ByteParser(payload)
     random = bp.uint256()
     values: list[int | None] = []
@@ -125,7 +126,7 @@ def submit_signatures_type_0(payload: bytes) -> SubmitSignatures:
     payload_bp = ByteParser(payload)
     message_to_parse = payload_bp.next_n(38)
     signature_to_parse = payload_bp.next_n(65)
-    unsignedMessage = payload_bp.drain()
+    unsigned_message = payload_bp.drain()
 
     message_bp = ByteParser(message_to_parse)
     protocol_id = message_bp.uint8()
@@ -150,14 +151,14 @@ def submit_signatures_type_0(payload: bytes) -> SubmitSignatures:
         type=0,
         message=message,
         signature=signature,
-        unsignedMessage=unsignedMessage,
+        unsigned_message=unsigned_message,
     )
 
 
 def submit_signatures_type_1(payload: bytes) -> SubmitSignatures:
     payload_bp = ByteParser(payload)
     signature_to_parse = payload_bp.next_n(65)
-    unsignedMessage = payload_bp.drain()
+    unsigned_message = payload_bp.drain()
 
     signature_bp = ByteParser(signature_to_parse)
     v = signature_bp.next_n(1).hex()
@@ -170,7 +171,7 @@ def submit_signatures_type_1(payload: bytes) -> SubmitSignatures:
         type=1,
         message=None,
         signature=signature,
-        unsignedMessage=unsignedMessage,
+        unsigned_message=unsigned_message,
     )
 
 

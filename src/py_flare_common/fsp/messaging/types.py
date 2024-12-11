@@ -63,4 +63,4 @@ class SubmitSignatures:
     type: int
     message: SubmitSignaturesMessage | None
     signature: Signature
-    unsignedMessage: bytes
+    unsigned_message: bytes

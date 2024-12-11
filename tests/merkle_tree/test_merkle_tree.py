@@ -2,7 +2,7 @@ from py_flare_common.merkle import MerkleTree
 
 
 def test_examples():
-    SCENARIOS = [
+    scenarios = [
         {
             "elements": ["0xabf1118796", "0x465afec45b"],
             "expectedRoot": "0x3542843c98b2d247a96f53d8d6af8484fb6eb91efaccf5cee404a7f2845ed061",
@@ -21,7 +21,7 @@ def test_examples():
         },
     ]
 
-    for scenario in SCENARIOS:
+    for scenario in scenarios:
         elements = scenario["elements"]
         root = scenario["expectedRoot"]
         tree = MerkleTree(elements)
@@ -29,7 +29,7 @@ def test_examples():
 
 
 def test_proofs_gen():
-    TREES = [
+    trees = [
         [
             {
                 "element": "0xabf1118796",
@@ -164,8 +164,8 @@ def test_proofs_gen():
         ],
     ]
 
-    for TREE in TREES:
-        tree = MerkleTree([el["element"] for el in TREE])
-        for el in TREE:
-            proof = tree.get_proof(el["element"])
+    for tree in trees:
+        merkle_tree = MerkleTree([el["element"] for el in tree])
+        for el in tree:
+            proof = merkle_tree.get_proof(el["element"])
             assert proof == el["proof"]
