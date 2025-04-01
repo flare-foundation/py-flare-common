@@ -1,4 +1,6 @@
 import time
+from abc import ABC, abstractmethod
+from typing import Generic, TypeVar
 
 from attrs import frozen
 
@@ -10,14 +12,16 @@ __all__ = [
     "RewardEpochFactory",
 ]
 
+T = TypeVar("T", bound=Epoch)
+
 
 @frozen
-class Factory:
+class Factory(ABC, Generic[T]):
     first_epoch_epoc: int
     epoch_duration: int
 
-    def make_epoch(self, id) -> Epoch:
-        return Epoch(id, self)
+    @abstractmethod
+    def make_epoch(self, id) -> T: ...
 
     def duration(self) -> int:
         return self.epoch_duration
@@ -25,10 +29,10 @@ class Factory:
     def _from_timestamp(self, ts: int) -> int:
         return (ts - self.first_epoch_epoc) // self.epoch_duration
 
-    def from_timestamp(self, ts: int) -> Epoch:
+    def from_timestamp(self, ts: int) -> T:
         return self.make_epoch(self._from_timestamp(ts))
 
-    def now(self) -> Epoch:
+    def now(self) -> T:
         return self.from_timestamp(int(time.time()))
 
     def now_id(self) -> int:
@@ -36,7 +40,16 @@ class Factory:
 
 
 @frozen
-class VotingEpochFactory(Factory):
+class EpochFactory(Factory[Epoch]):
+    first_epoch_epoc: int
+    epoch_duration: int
+
+    def make_epoch(self, id) -> Epoch:
+        return Epoch(id, self)
+
+
+@frozen
+class VotingEpochFactory(Factory[VotingEpoch]):
     ftso_reveal_deadline: int
     # Reward Epoch data
     reward_first_epoch_epoc: int
@@ -58,7 +71,7 @@ class VotingEpochFactory(Factory):
 
 
 @frozen
-class RewardEpochFactory(Factory):
+class RewardEpochFactory(Factory[RewardEpoch]):
     # Voting Epoch data
     voting_first_epoch_epoc: int
     voting_epoch_duration: int

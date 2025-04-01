@@ -1,7 +1,7 @@
 import pytest
 
 from py_flare_common.fsp.epoch.factory import (
-    Factory,
+    EpochFactory,
     RewardEpochFactory,
     VotingEpochFactory,
 )
@@ -10,7 +10,7 @@ from py_flare_common.fsp.epoch.factory import (
 @pytest.fixture
 def factory():
     def make(first_epoch_epoc=1658430000, epoch_duration=90):
-        factory = Factory(first_epoch_epoc, epoch_duration)
+        factory = EpochFactory(first_epoch_epoc, epoch_duration)
         return factory
 
     return make
