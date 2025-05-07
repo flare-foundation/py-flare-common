@@ -129,7 +129,7 @@ class TestVotingEpoch:
         # ((1658430000 + 3361*90) - 1658430000) // 302400 = 1
         assert reward_epoch.id == 1
         assert reward_epoch.factory == RewardEpochFactory(
-            1658430000, 302400, 1658430000, 90, 45
+            1658430000, 302400, 1658430000, 90, 45, 223
         )
 
     def test_reveal_deadline(self, voting_epoch):
@@ -156,6 +156,7 @@ class TestRewardEpoch:
             voting_first_epoch_epoc=1658430000,
             voting_epoch_duration=90,
             voting_ftso_reveal_deadline=45,
+            initial_reward_epoch=223,
         ):
             epoch = RewardEpoch(
                 id,
@@ -165,6 +166,7 @@ class TestRewardEpoch:
                     voting_first_epoch_epoc,
                     voting_epoch_duration,
                     voting_ftso_reveal_deadline,
+                    initial_reward_epoch,
                 ),
             )
             return epoch
@@ -174,7 +176,7 @@ class TestRewardEpoch:
     def test_to_first_voting_epoch(self, reward_epoch):
         epoch = reward_epoch()
         voting_epoch_factory = VotingEpochFactory(
-            1658430000, 90, 45, 1658430000, 302400
+            1658430000, 90, 45, 1658430000, 302400, 223
         )
         # ((1658430000 + 2*302400) - 1658430000) // 90 = 6720
         assert epoch.to_first_voting_epoch() == VotingEpoch(6720, voting_epoch_factory)

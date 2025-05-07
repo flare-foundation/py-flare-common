@@ -70,6 +70,7 @@ class TestVotingEpochFactory:
         assert voting_epoch_factory.ftso_reveal_deadline == 45
         assert voting_epoch_factory.reward_first_epoch_epoc == 1658430000
         assert voting_epoch_factory.reward_epoch_duration == 302400
+        assert voting_epoch_factory.initial_reward_epoch == 223
 
     def test_make_epoch(self, voting_epoch_factory):
         voting_epoch_factory = voting_epoch_factory()
@@ -83,7 +84,7 @@ class TestVotingEpochFactory:
         assert isinstance(epoch, RewardEpoch)
         assert epoch.id == 13
         assert epoch.factory == RewardEpochFactory(
-            1658430000, 302400, 1658430000, 90, 45
+            1658430000, 302400, 1658430000, 90, 45, 223
         )
 
 
@@ -96,6 +97,7 @@ class TestRewardEpochFactory:
         assert reward_epoch_factory.voting_first_epoch_epoc == 1658430000
         assert reward_epoch_factory.voting_epoch_duration == 90
         assert reward_epoch_factory.voting_ftso_reveal_deadline == 45
+        assert reward_epoch_factory.initial_reward_epoch == 223
 
     def test_make_epoch(self, reward_epoch_factory):
         reward_epoch_factory = reward_epoch_factory()
@@ -104,12 +106,19 @@ class TestRewardEpochFactory:
         assert epoch.id == 27
         assert epoch.factory == reward_epoch_factory
 
+    def test_make_initial_epoch(self, reward_epoch_factory):
+        reward_epoch_factory = reward_epoch_factory()
+        epoch = reward_epoch_factory.make_initial_epoch()
+        assert isinstance(epoch, RewardEpoch)
+        assert epoch.id == 223
+        assert epoch.factory == reward_epoch_factory
+
     def test_make_voting_epoch(self, reward_epoch_factory):
         epoch = reward_epoch_factory().make_voting_epoch(1658430000 + 90 * 13)
         assert isinstance(epoch, VotingEpoch)
         assert epoch.id == 13
         assert epoch.factory == VotingEpochFactory(
-            1658430000, 90, 45, 1658430000, 302400
+            1658430000, 90, 45, 1658430000, 302400, 223
         )
 
     def test_from_voting_epoch(self, reward_epoch_factory, voting_epoch_factory):

@@ -51,9 +51,11 @@ class EpochFactory(Factory[Epoch]):
 @frozen
 class VotingEpochFactory(Factory[VotingEpoch]):
     ftso_reveal_deadline: int
+
     # Reward Epoch data
     reward_first_epoch_epoc: int
     reward_epoch_duration: int
+    initial_reward_epoch: int
 
     def make_epoch(self, id) -> VotingEpoch:
         return VotingEpoch(id, self)
@@ -65,6 +67,7 @@ class VotingEpochFactory(Factory[VotingEpoch]):
             self.first_epoch_epoc,
             self.epoch_duration,
             self.ftso_reveal_deadline,
+            self.initial_reward_epoch,
         )
         id = factory._from_timestamp(t)
         return factory.make_epoch(id)
@@ -77,8 +80,14 @@ class RewardEpochFactory(Factory[RewardEpoch]):
     voting_epoch_duration: int
     voting_ftso_reveal_deadline: int
 
+    # first reward epoch, that
+    initial_reward_epoch: int
+
     def make_epoch(self, id) -> RewardEpoch:
         return RewardEpoch(id, self)
+
+    def make_initial_epoch(self) -> RewardEpoch:
+        return self.make_epoch(self.initial_reward_epoch)
 
     def make_voting_epoch(self, t: int):
         factory = VotingEpochFactory(
@@ -87,6 +96,7 @@ class RewardEpochFactory(Factory[RewardEpoch]):
             self.voting_ftso_reveal_deadline,
             self.first_epoch_epoc,
             self.epoch_duration,
+            self.initial_reward_epoch,
         )
         id = factory._from_timestamp(t)
         return factory.make_epoch(id)
