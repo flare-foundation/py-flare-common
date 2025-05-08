@@ -132,11 +132,21 @@ class TestSubmit:
         with pytest.raises(ParseError):
             parse_generic_tx(message)
 
-    @pytest.mark.parametrize("data, excepted", [(b"\x00", b"\x00"), ("00", b"\x00")])
+    @pytest.mark.parametrize(
+        "data, excepted",
+        [
+            (b"\x00", b"\x00"),
+            ("00", b"\x00"),
+            (b"\x6c\x53\x2f\xae", b""),
+            (b"\x57\xee\xd5\x80\x00", b"\x00"),
+            ("0x57eed58000", b"\x00"),
+            ("57eed58000", b"\x00"),
+        ],
+    )
     def test_to_bytes(self, data, excepted):
         assert to_bytes(data) == excepted
 
-    @pytest.mark.parametrize("data", ["x0"])
+    @pytest.mark.parametrize("data", ["x0", "0xx"])
     def test_to_bytes_wrong_string(self, data):
         with pytest.raises(ValueError):
             to_bytes(data)
