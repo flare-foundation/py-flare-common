@@ -15,6 +15,7 @@ voting_epoch_factory = VotingEpochFactory(
     ftso_reveal_deadline=flare_chain_config.voting_ftso_reveal_deadline,
     reward_first_epoch_epoc=flare_chain_config.reward_first_epoch_epoc,
     reward_epoch_duration=flare_chain_config.reward_epoch_duration,
+    initial_reward_epoch=flare_chain_config.initial_reward_epoch,
 )
 
 reward_epoch_factory = RewardEpochFactory(
@@ -23,6 +24,7 @@ reward_epoch_factory = RewardEpochFactory(
     voting_first_epoch_epoc=flare_chain_config.voting_first_epoch_epoc,
     voting_epoch_duration=flare_chain_config.voting_epoch_duration,
     voting_ftso_reveal_deadline=flare_chain_config.voting_ftso_reveal_deadline,
+    initial_reward_epoch=flare_chain_config.initial_reward_epoch,
 )
 
 
