@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 dynamic = [ "dependencies" ]
 name = "py-flare-common"
-version = "0.1.6"
+version = "0.1.7"
 authors = [
   { name="Matej Janezic", email="matej@flare.network" },
   { name="Luka Avbreht", email="luka@flare.network" },
