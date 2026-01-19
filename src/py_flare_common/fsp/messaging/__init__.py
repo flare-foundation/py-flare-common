@@ -1,4 +1,5 @@
 from .parse import (
+    parse_bitvector,
     parse_generic_tx,
     parse_submit1_tx,
     parse_submit2_tx,
@@ -6,6 +7,7 @@ from .parse import (
 )
 
 __all__ = [
+    "parse_bitvector",
     "parse_generic_tx",
     "parse_submit1_tx",
     "parse_submit2_tx",
