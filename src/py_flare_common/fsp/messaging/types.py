@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import Generic, TypeAlias, TypeVar
 
 from attrs import frozen
 
@@ -42,6 +42,9 @@ class FdcSubmit1:
 class FdcSubmit2:
     number_of_requests: int
     bit_vector: list[bool]
+
+
+Bitvector: TypeAlias = FdcSubmit2
 
 
 @frozen

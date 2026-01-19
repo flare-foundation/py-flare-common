@@ -4,6 +4,7 @@ from py_flare_common._hexstr.hexstr import to_bytes
 
 from .byte_parser import ByteParser, ParseError
 from .types import (
+    Bitvector,
     FdcSubmit1,
     FdcSubmit2,
     FtsoSubmit1,
@@ -18,6 +19,7 @@ from .types import (
 )
 
 __all__ = [
+    "parse_bitvector",
     "parse_generic_tx",
     "parse_submit1_tx",
     "parse_submit2_tx",
@@ -101,7 +103,7 @@ def ftso_submit2(payload: bytes) -> FtsoSubmit2:
     return FtsoSubmit2(random=random, values=values)
 
 
-def fdc_submit2(payload: bytes) -> FdcSubmit2:
+def parse_bitvector(payload: bytes) -> Bitvector:
     bp = ByteParser(payload)
     n_requests = bp.uint16()
 
@@ -116,10 +118,14 @@ def fdc_submit2(payload: bytes) -> FdcSubmit2:
             elif i >= 0:
                 bit_vector[i] = (byte >> shift) & 1 == 1
 
-    return FdcSubmit2(
+    return Bitvector(
         number_of_requests=n_requests,
         bit_vector=bit_vector,
     )
+
+
+def fdc_submit2(payload: bytes) -> FdcSubmit2:
+    return parse_bitvector(payload)
 
 
 def submit_signatures_type_0(payload: bytes) -> SubmitSignatures:
