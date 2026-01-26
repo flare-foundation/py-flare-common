@@ -526,3 +526,31 @@ class UpshiftClaim(InstructionAbc):
             )
         except exceptions.EncodeError as e:
             raise exceptions.DecodeError("invalid instruction") from e
+
+
+@attrs.frozen
+class CustomInstruction(InstructionAbc):
+    INSTRUCTION_ID = 0xFF
+
+    wallet_id: int = attrs.field(validator=validators.make_uint_validator(8))
+    call_hash: str = attrs.field(validator=validators.make_hexstr_validator(30))
+
+    def encode(self) -> bytes:
+        b = bytearray(32)
+        b[0] = self.INSTRUCTION_ID
+        b[1] = self.wallet_id
+        b[2:32] = bytes.fromhex(self.call_hash.removeprefix("0x"))
+        return bytes(b)
+
+    @classmethod
+    def decode(cls, b: bytes | str) -> Self:
+        b = validators.clean_str_or_bytes(b)
+        validators.validate_len_and_instruction_id(b, cls.INSTRUCTION_ID)
+
+        wallet_id = b[1]
+        call_hash = "0x" + b[2:32].hex()
+
+        try:
+            return cls(wallet_id=wallet_id, call_hash=call_hash)
+        except exceptions.EncodeError as e:
+            raise exceptions.DecodeError("invalid instruction") from e

@@ -32,6 +32,29 @@ def make_uint_validator(bits: int) -> Callable[[Any, Any, int], None]:
     return validator
 
 
+def make_hexstr_validator(nr_bytes: int) -> Callable[[Any, Any, str], None]:
+    def validator(instance, attribute, value):
+        if not isinstance(value, str):
+            raise exceptions.EncodeError(f"{attribute.name} must be an string")
+
+        if not value.startswith("0x"):
+            raise exceptions.EncodeError(f"{attribute.name} must start with 0x")
+
+        try:
+            b = bytes.fromhex(value.removeprefix("0x"))
+        except ValueError as e:
+            raise exceptions.EncodeError(
+                f"{attribute.name} must be a valid hex string"
+            ) from e
+
+        if len(b) != nr_bytes:
+            raise exceptions.EncodeError(
+                f"{attribute.name} must be {nr_bytes} bytes long"
+            )
+
+    return validator
+
+
 def checksum_address_validator(
     instance: Any, attribute: Any, value: ChecksumAddress
 ) -> None:

@@ -1,4 +1,5 @@
 from py_flare_common.smart_accounts.encoder.instructions import (
+    CustomInstruction,
     FirelightClaimWithdraw,
     FirelightCollateralReservationAndDeposit,
     FirelightDeposit,
@@ -13,6 +14,7 @@ from py_flare_common.smart_accounts.encoder.instructions import (
 )
 
 __all__ = [
+    "CustomInstruction",
     "FirelightClaimWithdraw",
     "FirelightCollateralReservationAndDeposit",
     "FirelightDeposit",
